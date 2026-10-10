@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build main.tex",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "/bin/zsh",
+            "runtimeArgs": [
+                "-c",
+                "cd ${workspaceFolder} && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -synctex=1 -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/bibtex main && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -synctex=1 -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -synctex=1 -interaction=nonstopmode main.tex && echo '=== main.pdf gerado ==='"
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}

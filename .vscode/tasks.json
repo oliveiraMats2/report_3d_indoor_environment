@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build main.tex",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/bibtex main && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -interaction=nonstopmode main.tex",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,14 +1,104 @@
-\documentclass{article}
+\documentclass[Portugues]{ic-tese-v3}
+%\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{epsfig, epstopdf}
 \usepackage{graphicx} % Required for inserting images
+\usepackage{subcaption}
+\captionsetup{font=small,skip=3pt}
+\usepackage{amssymb,url}
+\usepackage{multirow}
+\usepackage{booktabs, comment}
+\usepackage{ae}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage{ucs}
+\usepackage[brazil]{babel}
+\usepackage{xspace}
+\usepackage{xcolor}
+\renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.07}\renewcommand{\floatpagefraction}{0.85}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}\setlength{\floatsep}{6pt plus 2pt minus 2pt}\setlength{\abovecaptionskip}{3pt}
+\usepackage{fancyhdr}
+\usepackage[ttscale=.875]{libertine}
+\usepackage{libertinust1math}
+\usepackage{float} %for [H] in figures
+\usepackage{tabularx} %for X columns with auto text wrapping
+\usepackage[sort]{cite}
+% \usepackage{setspace}
+% \doublespacing
 
-\title{report_3d_indoor_environment}
-\author{m203656 }
-\date{October 2026}
+\newcommand{\ie}{\textit{i.e.,}\xspace}
+\newcommand{\eg}{\textit{e.g.,}\xspace}
+\newcommand{\review}[1]{\textcolor{black}{#1}}
+\definecolor{chgbg}{HTML}{2E8B57}
+\definecolor{chgblue}{HTML}{BDE5F8}
+\definecolor{chgbluetext}{HTML}{1565C0}
+\colorlet{shadecolor}{chgbg!38}
+\newcommand{\mychg}[1]{\colorbox{chgbg!45}{\textcolor{black}{#1}}}
+\newcommand{\mychgpar}[1]{\begin{shaded}\noindent\textcolor{black}{#1}\end{shaded}}
+% Author-requested style: mark changes as BLUE TEXT (\textcolor), not a blue background fill.
+\newcommand{\mychgblue}[1]{\textcolor{chgbluetext}{#1}}
+\newcommand{\mychgparblue}[1]{\textcolor{chgbluetext}{#1}}
+\definecolor{blue_gantt}{HTML}{74BBC9}
+\definecolor{yellow_gantt}{HTML}{FFD700}
+\definecolor{green_gantt}{HTML}{7AC142}
+
+% Keep this report's original margins instead of the ic-tese-v3 defaults (30/20/30/20 mm).
+\geometry{reset,a4paper,left=0.75in,top=1.05in,textwidth=40pc,textheight=55pc,headheight=0pt,headsep=0pt}
+\parindent 0.2in
+
+\usepackage{pdfpages}
+\usepackage[vlined,linesnumbered,ruled]{algorithm2e}
+\usepackage{pgfgantt} %for gant
+\usepackage{framed}
+\usepackage[colorlinks,linkcolor=chgbluetext,citecolor=black,urlcolor=black]{hyperref}
+
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+
+\providecommand{\resetlang}{} % ponytail: used by ic-tese-v3.cls but never defined there
 
 \begin{document}
 
-\maketitle
+\paginasiniciais
+% ponytail: ic-tese-v3 maps plain to empty, so number pages with fancyhdr (centered footer)
+\pagestyle{fancy}\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}\thispagestyle{fancy}
+\vspace{-16mm}
+\begin{center}
+{\large\textbf{Trabalho 2 - Reconstrução 3D | Visão Computacional}}\\[2mm]
+\small
+\begin{tabular}{|l||c||l|}
+ \hline
+ Nome & RA & Email \\
+ \hline\hline
+ Mateus Oliveira da Silva & 203656 & m203656@dac.unicamp.br \\
+ \hline
+ Emily Silva Tomadon & 213388 & e213388@dac.unicamp.br \\
+ \hline
+ Julia Milioranza Gomes & 284024 & j284024@dac.unicamp.br \\
+ \hline
+ Maxime Doudy & 276750 & c276750@dac.unicamp.br \\
+ \hline
+\end{tabular}\\[2mm]
+\textbf{Data de entrega}: 4 de novembro de 2026
+\end{center}
 
-\section{Introduction}
+\section{Introdução}
+
+% Compact bibliography (references in footnotesize, tight item spacing).
+% ponytail: bibtex errors out while there is no \cite yet; this block is harmless once the first citation exists.
+\begingroup
+\footnotesize
+\makeatletter
+\renewcommand\@biblabel[1]{#1.}
+\let\oldthebibliography\thebibliography
+\renewcommand{\thebibliography}[1]{%
+  \oldthebibliography{#1}%
+  \setlength{\itemsep}{0pt}%
+  \setlength{\parsep}{0pt}%
+  \setlength{\topsep}{0pt}%
+}
+\makeatother
+\bibliographystyle{unsrt}
+\bibliography{references}
+\endgroup
 
 \end{document}
