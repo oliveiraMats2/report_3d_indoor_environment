@@ -1,0 +1,36 @@
+\section{Resultados e discussão}
+\label{sec:resultados}
+
+O SfM registrou 2326 dos 2327 quadros (99,96\%) e reconstruiu 727716 pontos esparsos, com comprimento médio de trilha 9,41, 2943 observações por imagem e erro médio de reprojeção de 0,565\,px. A etapa levou 2123,6\,s: 55,7\,s na extração de características, 405,2\,s no casamento e 1651\,s no mapeamento. A densidade esparsa limpa foi 23496 pontos/m$^2$. A trajetória retornou visualmente à região inicial, com 92 inliers entre os quadros \texttt{img\_0115} e \texttt{img\_2244}; a distância entre a primeira e a última câmera foi 60,43\,cm em um percurso de 76,13\,m, ou deriva de 0,794\%.
+
+A planta estimou 274,6 $\times$ 444,0\,cm e área de 12,19\,m$^2$, a partir de 53128 pontos de parede e cinco planos verticais. Dois cantos quase ortogonais tiveram 89,38 e 91,17 graus; os dois encontros com a parede chanfrada ficaram em 141,5 e 132,6 graus, contra 135 graus nominais. Na validação métrica leave-one-out, os erros absolutos foram 3,95\,cm na janela, 19,05\,cm em pia--fogão, 5,37\,cm na porta ao lado da pia, 6,48\,cm na porta e 15,95\,cm no trecho das geladeiras. Isso corresponde a erro absoluto médio de 10,16\,cm e relativo médio de 3,75\%; o pior erro relativo foi 5,27\%.
+
+\begin{table}[!ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Densificação após limpeza. Completude: células do piso esparso cobertas; Chamfer: distância simétrica à nuvem esparsa.}
+\label{tab:denso}
+\begin{tabular}{lrrrr}
+\toprule
+Método & Pontos & Pontos/m$^2$ & Completude & Chamfer (cm) \\
+\midrule
+PatchMatch    & 1428041 & 117129 & 0,865 & 1,951 \\
+Plane Sweep   & 1394223 & 114356 & \textbf{0,929} & \textbf{1,629} \\
+CasMVSNet     & 1904158 & 156181 & 0,893 & 3,508 \\
+PatchMatchNet & \textbf{2146759} & \textbf{176079} & 0,908 & 2,222 \\
+VGGT          & 407682 & 33438 & 0,372 & 13,229 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+O Plane Sweep obteve a melhor completude e a menor distância de Chamfer, enquanto o PatchMatchNet produziu a maior densidade. O PatchMatch, escolhido para a malha, foi mais lento: 26397,7\,s, contra 1317,7\,s do Plane Sweep, 1132,4\,s do PatchMatchNet e 18,5\,s do VGGT. A velocidade do VGGT veio acompanhada de baixa completude e Chamfer de 13,23\,cm, mostrando que tempo isolado não é critério suficiente. A malha final preserva a organização global do cômodo, mas a reconstrução de Poisson fecha regiões não observadas e pode criar superfícies suaves ou pontes artificiais; por isso, as medidas são feitas sobre planos e nuvens, não sobre qualquer triângulo da malha.
+
+\textbf{Regiões difíceis.} Em pontos classificados como baixa textura, o erro médio subiu de 0,565 para 0,838\,px e a cobertura densa caiu de 98,2\% para 94,0\%. Nas 431 amostras próximas a descontinuidades de profundidade, o erro chegou a 0,984\,px e a cobertura caiu para 37,6\%, o pior caso. Reflexos e regiões escuras apresentaram 0,673 e 0,664\,px, respectivamente. Esses resultados confirmam que paredes lisas, oclusões e bordas de objetos são mais críticas do que regiões texturizadas, cuja média foi 0,541\,px.
+
+\textbf{Consistência visual.} Seis vistas renderizadas a partir da malha foram comparadas com os quadros reais. O PSNR médio foi 15,93\,dB e o SSIM médio, 0,574; o melhor par alcançou 18,14\,dB e 0,808. Esses valores avaliam simultaneamente geometria incompleta, ausência de textura fotogramétrica e simplificações do renderizador, portanto não devem ser interpretados como erro geométrico puro. A evidência principal de precisão continua sendo o erro de reprojeção, a validação métrica e a deriva do laço.
+
+% [INSERIR FIGURA COMPOSTA: nuvem esparsa com câmeras + vista superior/planta.]
+% [INSERIR FIGURA: comparação visual de 3 ou 4 métodos densos.]
+% [INSERIR FIGURA COMPOSTA: foto versus render + mapa de regiões difíceis.]
+

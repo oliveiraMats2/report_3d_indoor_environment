@@ -15,90 +15,191 @@
 \usepackage[brazil]{babel}
 \usepackage{xspace}
 \usepackage{xcolor}
-\renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.07}\renewcommand{\floatpagefraction}{0.85}
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}\setlength{\floatsep}{6pt plus 2pt minus 2pt}\setlength{\abovecaptionskip}{3pt}
+
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.85}
+
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+
 \usepackage{fancyhdr}
 \usepackage[ttscale=.875]{libertine}
 \usepackage{libertinust1math}
 \usepackage{float} %for [H] in figures
 \usepackage{tabularx} %for X columns with auto text wrapping
 \usepackage[sort]{cite}
+
 % \usepackage{setspace}
 % \doublespacing
 
 \newcommand{\ie}{\textit{i.e.,}\xspace}
 \newcommand{\eg}{\textit{e.g.,}\xspace}
 \newcommand{\review}[1]{\textcolor{black}{#1}}
+
 \definecolor{chgbg}{HTML}{2E8B57}
 \definecolor{chgblue}{HTML}{BDE5F8}
 \definecolor{chgbluetext}{HTML}{1565C0}
 \colorlet{shadecolor}{chgbg!38}
-\newcommand{\mychg}[1]{\colorbox{chgbg!45}{\textcolor{black}{#1}}}
-\newcommand{\mychgpar}[1]{\begin{shaded}\noindent\textcolor{black}{#1}\end{shaded}}
-% Author-requested style: mark changes as BLUE TEXT (\textcolor), not a blue background fill.
-\newcommand{\mychgblue}[1]{\textcolor{chgbluetext}{#1}}
-\newcommand{\mychgparblue}[1]{\textcolor{chgbluetext}{#1}}
+
+\newcommand{\mychg}[1]{%
+  \colorbox{chgbg!45}{\textcolor{black}{#1}}%
+}
+
+\newcommand{\mychgpar}[1]{%
+  \begin{shaded}
+  \noindent\textcolor{black}{#1}
+  \end{shaded}
+}
+
+% Author-requested style: mark changes as BLUE TEXT
+% (\textcolor), not a blue background fill.
+\newcommand{\mychgblue}[1]{%
+  \textcolor{chgbluetext}{#1}
+}
+
+\newcommand{\mychgparblue}[1]{%
+  \textcolor{chgbluetext}{#1}
+}
+
 \definecolor{blue_gantt}{HTML}{74BBC9}
 \definecolor{yellow_gantt}{HTML}{FFD700}
 \definecolor{green_gantt}{HTML}{7AC142}
 
-% Keep this report's original margins instead of the ic-tese-v3 defaults (30/20/30/20 mm).
-\geometry{reset,a4paper,left=0.75in,top=1.05in,textwidth=40pc,textheight=55pc,headheight=0pt,headsep=0pt}
+% Keep this report's original margins instead of the
+% ic-tese-v3 defaults (30/20/30/20 mm).
+\geometry{
+  reset,
+  a4paper,
+  left=0.75in,
+  top=1.05in,
+  textwidth=40pc,
+  textheight=55pc,
+  headheight=0pt,
+  headsep=0pt
+}
+
 \parindent 0.2in
 
 \usepackage{pdfpages}
 \usepackage[vlined,linesnumbered,ruled]{algorithm2e}
 \usepackage{pgfgantt} %for gant
 \usepackage{framed}
-\usepackage[colorlinks,linkcolor=chgbluetext,citecolor=black,urlcolor=black]{hyperref}
+
+\usepackage[
+  colorlinks,
+  linkcolor=chgbluetext,
+  citecolor=black,
+  urlcolor=black
+]{hyperref}
 
 \newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
 
-\providecommand{\resetlang}{} % ponytail: used by ic-tese-v3.cls but never defined there
+% ponytail: used by ic-tese-v3.cls but never defined there
+\providecommand{\resetlang}{}
 
 \begin{document}
 
 \paginasiniciais
-% ponytail: ic-tese-v3 maps plain to empty, so number pages with fancyhdr (centered footer)
-\pagestyle{fancy}\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}\thispagestyle{fancy}
+
+% ponytail: ic-tese-v3 maps plain to empty, so number pages
+% with fancyhdr (centered footer)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\thispagestyle{fancy}
+
 \vspace{-16mm}
+
 \begin{center}
-{\large\textbf{Trabalho 2 - Reconstrução 3D | Visão Computacional}}\\[2mm]
+
+{\large\textbf{Trabalho 2 - Reconstrução 3D |
+Visão Computacional}}\\[2mm]
+
 \small
+
 \begin{tabular}{|l||c||l|}
- \hline
- Nome & RA & Email \\
- \hline\hline
- Mateus Oliveira da Silva & 203656 & m203656@dac.unicamp.br \\
- \hline
- Emily Silva Tomadon & 213388 & e213388@dac.unicamp.br \\
- \hline
- Julia Milioranza Gomes & 284024 & j284024@dac.unicamp.br \\
- \hline
- Maxime Doudy & 276750 & c276750@dac.unicamp.br \\
- \hline
+\hline
+Nome & RA & Email \\
+\hline\hline
+Mateus Oliveira da Silva
+& 203656
+& m203656@dac.unicamp.br \\
+\hline
+Emily Silva Tomadon
+& 213388
+& e213388@dac.unicamp.br \\
+\hline
+Julia Milioranza Gomes
+& 284024
+& j284024@dac.unicamp.br \\
+\hline
+Maxime Doudy
+& 276750
+& c276750@dac.unicamp.br \\
+\hline
 \end{tabular}\\[2mm]
+
 \textbf{Data de entrega}: 4 de novembro de 2026
+
 \end{center}
 
-\section{Introdução}
+% 1. Introdução
+\input{sections/01_introduction/1_0_intro}
 
-% Compact bibliography (references in footnotesize, tight item spacing).
-% ponytail: bibtex errors out while there is no \cite yet; this block is harmless once the first citation exists.
+% 2. Aquisição
+\input{sections/2_aquisicao/2_0_aquisicao}
+
+
+% Pipeline
+\begin{figure}[!t]
+\centering
+
+\includegraphics[
+  width=0.76\textwidth
+]{images/report/pipeline.png}
+
+\caption{Pipeline da reconstrução 3D.}
+
+\label{fig:pipeline}
+\end{figure}
+
+
+% 3. Método
+\input{sections/3_metodo/3_0_metodo}
+
+% 4. Resultados
+\input{sections/4_resultados/4_0_resultados}
+
+% Compact bibliography
+% (references in footnotesize, tight item spacing).
+% ponytail: bibtex errors out while there is no \cite yet;
+% this block is harmless once the first citation exists.
 \begingroup
+
 \footnotesize
+
 \makeatletter
+
 \renewcommand\@biblabel[1]{#1.}
+
 \let\oldthebibliography\thebibliography
+
 \renewcommand{\thebibliography}[1]{%
   \oldthebibliography{#1}%
   \setlength{\itemsep}{0pt}%
   \setlength{\parsep}{0pt}%
   \setlength{\topsep}{0pt}%
 }
+
 \makeatother
+
 \bibliographystyle{unsrt}
 \bibliography{references}
+
 \endgroup
 
 \end{document}

@@ -1,0 +1,6 @@
+\section{Introdução}
+\label{sec:introducao}
+
+O objetivo é reconstruir metricamente um ambiente interno a partir de um vídeo monocular, seguindo um pipeline que parte da seleção dos quadros, passa por características locais e geometria epipolar e chega a uma reconstrução 3D esparsa, nuvens densas, planta baixa e malha~\cite{hartley2004multiple,schoenberger2016sfm}. A cena principal é uma cozinha percorrida com a câmera voltada para paredes, móveis e aberturas, com retorno à região inicial para formar um laço. O vídeo contém 13097 quadros em 436,6\,s; a execução principal analisada neste relatório conservou 2327 quadros e registrou 2326 deles.
+
+O sistema compara SIFT, ORB e AKAZE, mas usa SIFT na análise geométrica por sua maior distribuição espacial e maior taxa de recuperação de pose. O SfM global fornece as câmeras e a nuvem esparsa; uma planta medida no mundo real transfere a reconstrução para centímetros. A densificação compara métodos clássicos e aprendidos, incluindo PatchMatch, Plane Sweep, CasMVSNet, PatchMatchNet e VGGT, e a superfície é obtida por reconstrução de Poisson. O código está no repositório \href{https://github.com/oliveiraMats2/3d_indoor_environment}{\texttt{3d\_indoor\_environment}} e, neste texto, é citado como \texttt{arquivo.py:linha} relativamente à raiz do repositório, no commit \texttt{e73a99d}.

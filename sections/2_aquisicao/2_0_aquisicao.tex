@@ -1,0 +1,33 @@
+\section{Aquisição}
+\label{sec:aquisicao}
+
+O ambiente foi registrado com um iPhone [CONFIRMAR: modelo usado no vídeo \texttt{kitchen\_my\_home.MOV}], em 3840 $\times$ 2160\,px, 30\,fps e orientação horizontal. A câmera foi conduzida à mão ao longo de aproximadamente 76,13\,m, apontada para as superfícies da cozinha e terminando perto do ponto inicial. O percurso inclui paredes pouco texturizadas, regiões escuras, reflexos em superfícies metálicas, oclusões causadas pela mobília e descontinuidades de profundidade, condições que afetam tanto a correspondência quanto a densificação.
+
+O vídeo tem 13097 quadros e duração de 436,6\,s. A extração reduz o maior lado para 1920\,px e produziu 2327 imagens; na execução aqui analisada não houve descarte na extração, embora a avaliação posterior de qualidade marque quadros desfocados, subexpostos, superexpostos, com pouco contraste ou pouca textura. O pipeline mede nitidez pela variância do Laplaciano, exposição pela média e pela fração de pixels saturados, contraste pelo desvio-padrão e textura pelo número de cantos FAST em \texttt{frame\_quality.py:44--88}. A seleção e o subamostramento estão em \texttt{extraction/selection.py:22--85}.
+
+A escala métrica foi definida por cinco segmentos medidos no ambiente: janela, trecho pia--fogão, porta ao lado da pia, porta e trecho das geladeiras. Essas medidas também permitem avaliação fora da amostra: para cada segmento, sua própria medida é retirada do ajuste da escala antes de calcular o erro. [CONFIRMAR: data, horário e local da captura; confirmar também se o aparelho foi o iPhone 14 Pro Max.] A \hyperref[tab:aquisicao]{Tabela~\ref*{tab:aquisicao}} resume os dados já verificados.
+
+\begin{table}[!ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Vídeo e quadros da cena principal.}
+\label{tab:aquisicao}
+\begin{tabular}{|l|l||l|l|}
+\hline
+\textbf{Cena} & cozinha, ambiente interno & \textbf{Duração} & 436,6\,s \\
+\hline
+\textbf{Dispositivo} & iPhone 14 Pro Max & \textbf{Taxa} & 30\,fps \\
+\hline
+\textbf{Vídeo original} & 3840 $\times$ 2160\,px & \textbf{Quadros originais} & 13097 \\
+\hline
+\textbf{Quadros usados} & 2327, até 1920 $\times$ 1080\,px & \textbf{Registrados} & 2326 (99,96\%) \\
+\hline
+\textbf{Trajeto estimado} & 76,13\,m, laço fechado & \textbf{Referência} & contorno medido em 5 segmentos \\
+\hline
+\end{tabular}
+\end{table}
+
+% [INSERIR FIGURA: 4 a 6 quadros distribuídos ao longo do vídeo, incluindo
+% parede lisa, brilho, região escura e retorno ao início.]
+

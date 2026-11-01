@@ -1,0 +1,65 @@
+\section{Método}
+\label{sec:metodo}
+
+A \hyperref[fig:pipeline]{Figura~\ref*{fig:pipeline}} resume o fluxo completo: aquisição e seleção, características locais, geometria de duas vistas, SfM global, escala e estrutura do ambiente, densificação, malha e avaliação. As subseções seguintes percorrem o código nessa ordem.
+
+\subsection{Seleção e controle de qualidade}
+
+O leitor abre o vídeo e amostra índices regularmente em \texttt{extraction/video.py:21--69}. Para reduzir redundância sem perder continuidade, o seletor pode procurar uma sobreposição-alvo entre quadros consecutivos e ajustar iterativamente a quantidade final em \texttt{extraction/selection.py:22--73}. A sobreposição é estimada com ORB, teste de Lowe e uma homografia robusta apenas para a etapa de seleção; esses descritores não são reutilizados pelo SfM. Na execução reportada, a seleção \texttt{all} conservou 2327 quadros. A sobreposição média estimada foi 0,912, mas somente 2,4\% dos pares ficaram no intervalo nominal de 60--80\%, evidenciando redundância temporal alta e também 21 transições problemáticas. A análise de qualidade em \texttt{frame\_quality.py:66--126} não apaga imagens: registra métricas e motivos para que quadros ruins possam ser excluídos do MVS sem quebrar as trilhas do SfM.
+
+\subsection{Detecção e descrição}
+
+A etapa 2 instancia SIFT, ORB e AKAZE em \texttt{detectores.py:28--30}. Cada detector é executado 30 vezes após duas repetições de aquecimento; o código mede número de keypoints, tempo, bytes do descritor, cobertura de uma grade $8\times8$, entropia espacial e percentis de escala em \texttt{detectores.py:61}. O SIFT constrói uma pirâmide de diferenças de Gaussianas, localiza extremos em posição e escala, atribui uma orientação dominante e produz um vetor de 128 componentes~\cite{lowe2004sift}. O ORB combina FAST orientado e BRIEF rotacionado~\cite{rublee2011orb}; o AKAZE detecta estruturas em um espaço de escala não linear~\cite{alcantarilla2013fast}.
+
+O SIFT foi escolhido por decisão multicritério. Em 100 quadros, apresentou 2822 keypoints por imagem, cobertura 0,807 e 54,67\,ms por quadro. Embora o ORB tenha sido mais rápido, com 9,80\,ms, o SIFT produziu a maior quantidade média de inliers (40,55), a maior taxa de poses recuperadas (69,7\%) e o menor erro de Sampson (0,203\,px). A pontuação normalizada final foi 0,936 para SIFT, 0,328 para ORB e 0,061 para AKAZE.
+
+\begin{table}[!ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Comparação dos detectores em 100 quadros e 99 pares consecutivos. Cobertura: fração das células ocupadas na grade $8\times8$; pose: pares com pose recuperada.}
+\label{tab:detectores}
+\begin{tabular}{lrrrrrr}
+\toprule
+Detector & Keypoints & Cobertura & Tempo (ms) & Inliers & Pose (\%) & Sampson (px) \\
+\midrule
+SIFT  & 2822 & \textbf{0,807} & 54,67 & \textbf{40,55} & \textbf{69,7} & \textbf{0,203} \\
+ORB   & \textbf{4045} & 0,695 & \textbf{9,80} & 31,32 & 54,5 & 0,210 \\
+AKAZE & 1728 & 0,704 & 82,12 & 20,77 & 49,5 & 0,208 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% [INSERIR FIGURA: mesmo quadro com SIFT, ORB e AKAZE; usar img_1110.]
+
+\subsection{Emparelhamento e geometria epipolar}
+
+Para descritores SIFT, o \texttt{BFMatcher} usa distância $L_2$; para ORB e AKAZE, usa Hamming, como definido em \texttt{matching/matcher.py:86--122}. O casamento é exato e retorna os dois vizinhos mais próximos com \texttt{knnMatch}($k=2$). O teste de Lowe em \texttt{matching/filters.py:87--110} conserva $m_1$ somente quando
+\[
+ d(m_1) < 0{,}75\,d(m_2),
+\]
+eliminando descritores cujo melhor e segundo melhor candidatos são semelhantes. Em seguida, a verificação cruzada em \texttt{matching/cross\_check.py:54--66} exige que a associação também seja o vizinho mais próximo no sentido inverso. Para o SIFT, um par consecutivo teve, em média, 2833 candidatos brutos, 168 após Lowe, 69 após a verificação cruzada e 41 inliers geométricos.
+
+Com as correspondências restantes, \texttt{cv2.findFundamentalMat} e \texttt{cv2.findEssentialMat} estimam $F$ e $E$ por USAC--MAGSAC, limiar de 1\,px, confiança 0,999 e até 5000 iterações em \texttt{epipolar/estimate.py:134--174}. A matriz fundamental satisfaz $\mathbf{x}'^{\top}F\mathbf{x}=0$; dadas as intrínsecas $K$, a essencial é $E=K^{\top}FK$. O MAGSAC reduz a sensibilidade a um único limiar rígido ao marginalizar a escala do ruído~\cite{barath2019magsac}.
+
+A decomposição de $E$ gera quatro combinações possíveis de rotação e direção de translação. \texttt{cv2.recoverPose}, em \texttt{epipolar/pose.py:94--126}, escolhe aquela com mais pontos diante das duas câmeras pelo teste de quiralidade. Por fim, \texttt{cv2.triangulatePoints}, em \texttt{epipolar/triangulate.py:99--151}, resolve a triangulação linear entre $P_1=K[I\mid0]$ e $P_2=K[R\mid t]$; o código elimina pontos não finitos ou atrás de alguma câmera e mede a paralaxe. Nos 99 pares SIFT avaliados, 69 tiveram pose válida; a mediana foi 30 correspondências, 8 inliers geométricos, 15 pontos triangulados e paralaxe de 12,67 graus.
+
+% [INSERIR FIGURA COMPOSTA: matches antes/depois de Lowe e RANSAC; linhas
+% epipolares; nuvem de duas vistas. Usar o par img_2299--img_2326.]
+
+\subsection{SfM global e escala métrica}
+
+A reconstrução global usa extração SIFT, casamento sequencial com detecção de laço e mapeamento global GLOMAP no contêiner COLMAP. Os comandos e parâmetros são montados em \texttt{sfm/colmap.py:229--292}; o casamento liga cada quadro aos dez vizinhos temporais e acrescenta candidatos de fechamento por árvore de vocabulário. O modelo de câmera é compartilhado entre todos os quadros, e o ajuste global refina poses, pontos e intrínsecas. Entre os modelos produzidos, o código conserva aquele com mais imagens registradas em \texttt{sfm/colmap.py:294--331}. A conversão para matrizes NumPy, centros de câmera, observações e estatísticas é feita por \texttt{sfm/convert.py:164--224}.
+
+O SfM determina a cena apenas até uma transformação de similaridade. A escala é recuperada ajustando a projeção superior da nuvem a um contorno medido da cozinha. O procedimento remove outliers, encontra o piso, testa rotações e espelhamento do contorno e estima a escala robustamente em \texttt{sfm/scale\_outline.py:100--247}. O ajuste aceito resultou em 29,37\,cm por unidade do modelo, resíduo mediano de 1,33\,cm, percentil 90 de 7,37\,cm, 93,1\% de inliers e suporte de contorno de 99,6\%.
+
+\subsection{Limpeza, planos e planta baixa}
+
+Após a escala, a limpeza em \texttt{cloud/clean.py:97--179} aplica remoção estatística de outliers, voxelização de 1\,cm e recorte robusto. Na nuvem esparsa, 727716 pontos foram reduzidos a 286458 sem alterar a escala. O piso e as paredes são extraídos iterativamente por RANSAC: \texttt{segment\_plane} remove os inliers de cada plano em \texttt{cloud/planes.py:123--144}, e as paredes são ajustadas como segmentos no plano do piso. A planta em \texttt{cloud/floorplan.py:179--215} usa as direções das paredes e um retângulo orientado robusto; a trajetória das câmeras é projetada sobre a mesma referência.
+
+\subsection{Densificação e malha}
+
+No PatchMatch, as imagens são retificadas, os mapas de profundidade são estimados com consistência fotométrica e geométrica e as vistas são fundidas em uma nuvem, sequência implementada em \texttt{dense/pycolmap\_dense.py:128--149}. O pipeline também executa métodos clássicos e redes de profundidade multi-vista. Para tornar a comparação independente do número bruto de pontos, \texttt{dense/compare.py:131--194} calcula: densidade em pontos por metro quadrado; completude, como a fração das células do piso esparso atingidas por pelo menos um ponto denso; e distância de Chamfer simétrica à nuvem esparsa.
+
+A malha parte da nuvem PatchMatch limpa. As normais são orientadas para a câmera mais próxima e a reconstrução de Poisson resolve uma função implícita cuja isosuperfície aproxima os pontos orientados~\cite{kazhdan2006poisson}; o código está em \texttt{mesh/poisson.py:144--197}. Com profundidade 10, o método recebeu 1428041 pontos e produziu inicialmente 1555804 vértices e 3120072 faces. O pós-processamento de buracos resultou na malha final com 1531049 vértices e 3074852 faces, exportada com a trajetória e os frustos em \texttt{mesh/mesh.py:183--279}.
+
