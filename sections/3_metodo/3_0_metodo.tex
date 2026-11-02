@@ -32,7 +32,7 @@ AKAZE & 1728 & 0,704 & 82,12 & 20,77 & 0,295 & 49,5 & 0,208 & 0,061 \\
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{keypoints.jpg}
+\href{https://drive.google.com/file/d/1wCxCERt4ACUUeydl_StixIToCial4OT2/view}{\includegraphics[width=0.9\textwidth]{keypoints.jpg}}
 \caption{Keypoints do quadro img\_1110 por detector (até 5000 pedidos): pontos neste quadro e, no benchmark, inliers por par e escore.}
 \label{fig:kp}
 \end{figure}
@@ -44,14 +44,14 @@ O casamento é por força bruta (BFMatcher, do OpenCV) com distância euclidiana
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{matches_epilines.jpg}
+\href{https://drive.google.com/file/d/1OA0AgBwK298hm96TCMhAZBlgBEU3kLIm/view}{\includegraphics[width=\textwidth]{matches_epilines.jpg}}
 \caption{Par SIFT img\_0774 (em cima) e img\_0790 (embaixo), o de mais inliers entre os 99 pares. (a) Dos 3938 vizinhos mais próximos, 817 passam no teste de Lowe (0,75) e 765 na verificação mútua; o MAGSAC separa 666 inliers (verde) e 99 outliers (vermelho), razão 0,87. (b) Dez inliers, um por cor, sobre as retas epipolares de $F$; rotação de 25,1\textdegree{} e erro de Sampson médio de 0,26\,px.}
 \label{fig:matches}
 \end{figure}
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{triangulacao.jpg}
+\href{https://drive.google.com/file/d/1cgNjL5Z3142VyBCV6ikSq1gNeKdlUXy8/view}{\includegraphics[width=\textwidth]{triangulacao.jpg}}
 \caption{Triangulação de um ponto real da esparsa, o 3046041, na quina de um livro sobre a bancada, visto em 9 imagens com erro médio de reprojeção de 0,22\,px. Os raios dos keypoints em img\_1150, com erro de 0,47\,px, e em img\_1154, com 0,15\,px, se cruzam em $\mathbf{X}=(-60{,}8;\,42{,}6;\,-144{,}7)$\,cm, com linha de base de 12,0\,cm.}
 \label{fig:tri}
 \end{figure}
@@ -77,7 +77,7 @@ O SfM define a cena só até uma similaridade. Era: marcador ArUco. Ficou: conto
 
 \begin{figure}[!htbp]
 \centering
-\begin{tabular}[b]{@{}c@{}}\includegraphics[height=100pt]{limpeza_outliers_img_0127.jpg}\\[-1pt]{\scriptsize (a, b) Esparsa}\end{tabular}\hspace{2pt}\begin{tabular}[b]{@{}c@{}}\includegraphics[height=100pt]{malha_antes_crop.jpg}\\[-1pt]{\scriptsize (c) Antes}\end{tabular}\hspace{2pt}\begin{tabular}[b]{@{}c@{}}\includegraphics[height=100pt]{malha_limpa_crop.jpg}\\[-1pt]{\scriptsize (d) Depois: malha limpa}\end{tabular}
+\begin{tabular}[b]{@{}c@{}}\href{https://drive.google.com/file/d/1LLr7Vfwka31LMu9yZ0G6scGT7CqFzyC-/view}{\includegraphics[height=100pt]{limpeza_outliers_img_0127.jpg}}\\[-1pt]{\scriptsize (a, b) Esparsa}\end{tabular}\hspace{2pt}\begin{tabular}[b]{@{}c@{}}\href{https://drive.google.com/file/d/19XXamM0oKhm8YMGQlDYc6DJU60Y1r74a/view}{\includegraphics[height=100pt]{malha_antes_crop.jpg}}\\[-1pt]{\scriptsize (c) Antes}\end{tabular}\hspace{2pt}\begin{tabular}[b]{@{}c@{}}\href{https://drive.google.com/file/d/1wTDwfHkCn_aJADYoa6q1e6VDV9F0RDMK/view}{\includegraphics[height=100pt]{malha_limpa_crop.jpg}}\\[-1pt]{\scriptsize (d) Depois: malha limpa}\end{tabular}
 \caption{(a, b) Recomputação ilustrativa dos outliers da esparsa, com 20 vizinhos e desvio 2,0, em vermelho: 9511 de 727716 pontos na vista de cima e 9 de 14164 no quadro img\_0127. (c) Malha de Poisson da rodada (1555804 vértices e 3120072 faces), sem o teto, com as faces que o corte por densidade 0,02 remove em vermelho. (d) Malha limpa gerada a partir dela, sem o teto e sem o exterior, com 3444576 vértices e 6888396 faces.}
 \label{fig:limpeza}
 \end{figure}

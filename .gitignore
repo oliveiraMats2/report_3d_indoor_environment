@@ -39,3 +39,7 @@ notas/
 # Figura do pipeline (vetorial) fica versionada; caches de render ficam fora
 !images/report/pipeline.pdf
 images/report/scripts/_*.png
+
+# Copias 1080p para o Drive
+drive_1080p/
+drive_requisitos/
