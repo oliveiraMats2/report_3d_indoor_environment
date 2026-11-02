@@ -1,0 +1,62 @@
+{
+ "medidas": [
+  {
+   "nome": "parede da janela",
+   "valor_cm": 273,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_1_janela_pia.jpg"
+  },
+  {
+   "nome": "parede da pia e do fogão",
+   "valor_cm": 429,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_1_janela_pia.jpg"
+  },
+  {
+   "nome": "parede entre a pia e a porta",
+   "valor_cm": 192,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_2_porta.jpg"
+  },
+  {
+   "nome": "parede da porta",
+   "valor_cm": 123,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_2_porta.jpg"
+  },
+  {
+   "nome": "parede das geladeiras",
+   "valor_cm": 332,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_2_porta.jpg"
+  },
+  {
+   "nome": "parede das geladeiras",
+   "valor_cm": 332,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_3_geladeiras.jpg"
+  },
+  {
+   "nome": "parede da janela",
+   "valor_cm": 273,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_3_geladeiras.jpg"
+  },
+  {
+   "nome": "parede da janela",
+   "valor_cm": 273,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_4_pia.jpg"
+  },
+  {
+   "nome": "parede da pia e do fogão",
+   "valor_cm": 429,
+   "fonte": "kitchen_my_home/medidas/medidas_ocr.json (paredes_m; conferido com medidas.yaml)",
+   "foto": "imagem_medidas_4_pia.jpg"
+  }
+ ],
+ "perimetro_m": 13.49,
+ "area_m2": 11.26,
+ "pe_direito_m": null,
+ "fonte_derivados": "kitchen_my_home/medidas/medidas_ocr.json"
+}

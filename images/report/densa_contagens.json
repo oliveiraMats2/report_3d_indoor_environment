@@ -1,0 +1,12 @@
+{
+ "total": 1428041,
+ "fora_contorno": 52829,
+ "fora_altura": 19,
+ "flutuante_ruido": 37378,
+ "espurios": 90226,
+ "pct": 6.32,
+ "limiar_dk_cm": 2.302,
+ "margem_cm": 20.0,
+ "fora_contorno_pct": 3.7,
+ "flut_pct": 2.62
+}

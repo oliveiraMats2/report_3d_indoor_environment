@@ -1,65 +1,83 @@
 \section{Método}
 \label{sec:metodo}
 
-A \hyperref[fig:pipeline]{Figura~\ref*{fig:pipeline}} resume o fluxo completo: aquisição e seleção, características locais, geometria de duas vistas, SfM global, escala e estrutura do ambiente, densificação, malha e avaliação. As subseções seguintes percorrem o código nessa ordem.
+A Figura~\ref{fig:pipeline} resume o fluxo.
 
-\subsection{Seleção e controle de qualidade}
+\subsection{Seleção de quadros e qualidade}
 
-O leitor abre o vídeo e amostra índices regularmente em \texttt{extraction/video.py:21--69}. Para reduzir redundância sem perder continuidade, o seletor pode procurar uma sobreposição-alvo entre quadros consecutivos e ajustar iterativamente a quantidade final em \texttt{extraction/selection.py:22--73}. A sobreposição é estimada com ORB, teste de Lowe e uma homografia robusta apenas para a etapa de seleção; esses descritores não são reutilizados pelo SfM. Na execução reportada, a seleção \texttt{all} conservou 2327 quadros. A sobreposição média estimada foi 0,912, mas somente 2,4\% dos pares ficaram no intervalo nominal de 60--80\%, evidenciando redundância temporal alta e também 21 transições problemáticas. A análise de qualidade em \texttt{frame\_quality.py:66--126} não apaga imagens: registra métricas e motivos para que quadros ruins possam ser excluídos do MVS sem quebrar as trilhas do SfM.
+% fonte: extracao.quadros_usados, extracao.sobreposicao_media, extracao.sobreposicao_faixa_pct, D5.*, qualidade.quadros_marcados
+O seletor por sobreposição-alvo, baseado em ORB, Lowe e homografia, existe no código, mas a cozinha não o usou. Era: sobreposição de 60 a 80\%, como no teste de 286 quadros, com média 0,677 e 88,1\% dos pares na faixa. Ficou: todos os quadros com passo 10, 2327 quadros, com sobreposição média 0,912 e 2,4\% na faixa. Por quê: não perder trilhas no SfM, e com esse passo 2326 dos 2327 quadros foram registrados. A análise de qualidade só anota 730 quadros e não exclui nenhum.
 
-\subsection{Detecção e descrição}
+\subsection{Detectores}
 
-A etapa 2 instancia SIFT, ORB e AKAZE em \texttt{detectores.py:28--30}. Cada detector é executado 30 vezes após duas repetições de aquecimento; o código mede número de keypoints, tempo, bytes do descritor, cobertura de uma grade $8\times8$, entropia espacial e percentis de escala em \texttt{detectores.py:61}. O SIFT constrói uma pirâmide de diferenças de Gaussianas, localiza extremos em posição e escala, atribui uma orientação dominante e produz um vetor de 128 componentes~\cite{lowe2004sift}. O ORB combina FAST orientado e BRIEF rotacionado~\cite{rublee2011orb}; o AKAZE detecta estruturas em um espaço de escala não linear~\cite{alcantarilla2013fast}.
+% fonte: tab:detectores, detector.*, detector.n_quadros, detector.n_pares
+Comparamos SIFT~\cite{lowe2004sift}, ORB~\cite{rublee2011orb} e AKAZE~\cite{alcantarilla2013fast} em 100 quadros uniformes e 99 pares, com até 5000 pontos e 30 execuções cronometradas após 2 de aquecimento. Era: três detectores. Ficou: SIFT, por qualidade e não velocidade. Na Tabela~\ref{tab:detectores}, o SIFT obtém escore 0,936 contra 0,328 do ORB e 0,061 do AKAZE, e 40,55 inliers por par contra 31,3 e 20,8; o ORB é o mais rápido, com 9,8\,ms contra 54,7\,ms, e perde em qualidade. O SfM usa o SIFT do COLMAP, software de SfM e de estéreo multivisão (MVS, Multi-View Stereo) (Figura~\ref{fig:kp}).
 
-O SIFT foi escolhido por decisão multicritério. Em 100 quadros, apresentou 2822 keypoints por imagem, cobertura 0,807 e 54,67\,ms por quadro. Embora o ORB tenha sido mais rápido, com 9,80\,ms, o SIFT produziu a maior quantidade média de inliers (40,55), a maior taxa de poses recuperadas (69,7\%) e o menor erro de Sampson (0,203\,px). A pontuação normalizada final foi 0,936 para SIFT, 0,328 para ORB e 0,061 para AKAZE.
-
-\begin{table}[!ht]
+\begin{table}[!htbp]
 \centering
-\footnotesize
-\setlength{\tabcolsep}{3.5pt}
-\caption{Comparação dos detectores em 100 quadros e 99 pares consecutivos. Cobertura: fração das células ocupadas na grade $8\times8$; pose: pares com pose recuperada.}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Detectores em 100 quadros e 99 pares vizinhos. Cobertura: células ocupadas na grade $8\times8$; razão: inliers sobre casamentos após Lowe e verificação cruzada; pose: pares com pose recuperada. Negrito: melhor valor por coluna.}
 \label{tab:detectores}
-\begin{tabular}{lrrrrrr}
+\begin{tabular}{lrrrrrrrr}
 \toprule
-Detector & Keypoints & Cobertura & Tempo (ms) & Inliers & Pose (\%) & Sampson (px) \\
+Detector & Keypoints & Cobertura & Tempo (ms) & Inliers & Razão & Pose (\%) & Sampson (px) & Escore \\
 \midrule
-SIFT  & 2822 & \textbf{0,807} & 54,67 & \textbf{40,55} & \textbf{69,7} & \textbf{0,203} \\
-ORB   & \textbf{4045} & 0,695 & \textbf{9,80} & 31,32 & 54,5 & 0,210 \\
-AKAZE & 1728 & 0,704 & 82,12 & 20,77 & 49,5 & 0,208 \\
+SIFT & 2822 & \textbf{0,807} & 54,67 & \textbf{40,55} & \textbf{0,390} & \textbf{69,7} & \textbf{0,203} & \textbf{0,936} \\
+ORB & \textbf{4045} & 0,695 & \textbf{9,80} & 31,32 & 0,303 & 54,5 & 0,210 & 0,328 \\
+AKAZE & 1728 & 0,704 & 82,12 & 20,77 & 0,295 & 49,5 & 0,208 & 0,061 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-% [INSERIR FIGURA: mesmo quadro com SIFT, ORB e AKAZE; usar img_1110.]
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{keypoints.jpg}
+\caption{Keypoints do quadro img\_1110 por detector (até 5000 pedidos): pontos neste quadro e, no benchmark, inliers por par e escore.}
+\label{fig:kp}
+\end{figure}
 
 \subsection{Emparelhamento e geometria epipolar}
 
-Para descritores SIFT, o \texttt{BFMatcher} usa distância $L_2$; para ORB e AKAZE, usa Hamming, como definido em \texttt{matching/matcher.py:86--122}. O casamento é exato e retorna os dois vizinhos mais próximos com \texttt{knnMatch}($k=2$). O teste de Lowe em \texttt{matching/filters.py:87--110} conserva $m_1$ somente quando
-\[
- d(m_1) < 0{,}75\,d(m_2),
-\]
-eliminando descritores cujo melhor e segundo melhor candidatos são semelhantes. Em seguida, a verificação cruzada em \texttt{matching/cross\_check.py:54--66} exige que a associação também seja o vizinho mais próximo no sentido inverso. Para o SIFT, um par consecutivo teve, em média, 2833 candidatos brutos, 168 após Lowe, 69 após a verificação cruzada e 41 inliers geométricos.
+% fonte: t6_referencias.md, detector.sift.brutos/lowe/cross/inliers, notas/legendas/F-MATCH.md
+O casamento é por força bruta (BFMatcher, do OpenCV) com distância euclidiana ($L_2$) e usa o teste de Lowe com razão 0,75, seguido de verificação cruzada. No benchmark, o SIFT passa de 2833 candidatas por par para 168 após Lowe, 69 após verificação cruzada e 41 inliers. A matriz fundamental $F$ e a essencial $E$ vêm do USAC-MAGSAC~\cite{barath2019magsac}, variante do RANSAC (Random Sample Consensus) com marginalização do limiar, com limiar de 1\,px, confiança 0,999 e até 5000 iterações. Nos estágios 2D, $E=K^{\top}FK$ usa a matriz de intrínsecos $K$ fixa, com distâncias focais fx=fy=1470\,px e centro óptico em (960; 540). O SfM refina os intrínsecos com o modelo OPENCV (câmera com distorção radial e tangencial do COLMAP) e chega a fx de 1551,5\,px, 5,5\% acima do valor fixo; os resultados 3D usam o $K$ do SfM. A pose, rotação e translação $(R,t)$, sai de \texttt{cv2.recoverPose} por quiralidade e os pontos de \texttt{cv2.triangulatePoints}. Nos 69 pares com pose válida, a mediana foi 35 correspondências, 15 inliers, 15 pontos 3D e 12,67 graus de paralaxe (Figuras~\ref{fig:matches} e~\ref{fig:tri}).
 
-Com as correspondências restantes, \texttt{cv2.findFundamentalMat} e \texttt{cv2.findEssentialMat} estimam $F$ e $E$ por USAC--MAGSAC, limiar de 1\,px, confiança 0,999 e até 5000 iterações em \texttt{epipolar/estimate.py:134--174}. A matriz fundamental satisfaz $\mathbf{x}'^{\top}F\mathbf{x}=0$; dadas as intrínsecas $K$, a essencial é $E=K^{\top}FK$. O MAGSAC reduz a sensibilidade a um único limiar rígido ao marginalizar a escala do ruído~\cite{barath2019magsac}.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{matches_epilines.jpg}
+\caption{Par SIFT img\_0774 (em cima) e img\_0790 (embaixo), o de mais inliers entre os 99 pares. (a) Dos 3938 vizinhos mais próximos, 817 passam no teste de Lowe (0,75) e 765 na verificação mútua; o MAGSAC separa 666 inliers (verde) e 99 outliers (vermelho), razão 0,87. (b) Dez inliers, um por cor, sobre as retas epipolares de $F$; rotação de 25,1\textdegree{} e erro de Sampson médio de 0,26\,px.}
+\label{fig:matches}
+\end{figure}
 
-A decomposição de $E$ gera quatro combinações possíveis de rotação e direção de translação. \texttt{cv2.recoverPose}, em \texttt{epipolar/pose.py:94--126}, escolhe aquela com mais pontos diante das duas câmeras pelo teste de quiralidade. Por fim, \texttt{cv2.triangulatePoints}, em \texttt{epipolar/triangulate.py:99--151}, resolve a triangulação linear entre $P_1=K[I\mid0]$ e $P_2=K[R\mid t]$; o código elimina pontos não finitos ou atrás de alguma câmera e mede a paralaxe. Nos 99 pares SIFT avaliados, 69 tiveram pose válida; a mediana foi 30 correspondências, 8 inliers geométricos, 15 pontos triangulados e paralaxe de 12,67 graus.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{triangulacao.jpg}
+\caption{Triangulação de um ponto real da esparsa, o 3046041, na quina de um livro sobre a bancada, visto em 9 imagens com erro médio de reprojeção de 0,22\,px. Os raios dos keypoints em img\_1150, com erro de 0,47\,px, e em img\_1154, com 0,15\,px, se cruzam em $\mathbf{X}=(-60{,}8;\,42{,}6;\,-144{,}7)$\,cm, com linha de base de 12,0\,cm.}
+\label{fig:tri}
+\end{figure}
 
-% [INSERIR FIGURA COMPOSTA: matches antes/depois de Lowe e RANSAC; linhas
-% epipolares; nuvem de duas vistas. Usar o par img_2299--img_2326.]
+\subsection{Estrutura a partir do movimento}
 
-\subsection{SfM global e escala métrica}
+% fonte: D3_D4.*, t6_referencias.md
+A cozinha usa extração SIFT com 8192 pontos, casamento sequencial com 10 vizinhos, detecção de laço por árvore de vocabulário, câmera OPENCV única e mapeamento global GLOMAP~\cite{pan2024glomap} sobre o COLMAP~\cite{schoenberger2016sfm}. O ajuste refina fx, fy e os coeficientes de distorção k1, k2, p1 e p2, e mantém o centro óptico cx e cy no centro da imagem. O pipeline roda em CPU (unidade central de processamento) ou em GPU; a GPU acelera o processamento, e os resultados são os da rodada final da cozinha com GLOMAP~\cite{pan2024glomap}.
 
-A reconstrução global usa extração SIFT, casamento sequencial com detecção de laço e mapeamento global GLOMAP no contêiner COLMAP. Os comandos e parâmetros são montados em \texttt{sfm/colmap.py:229--292}; o casamento liga cada quadro aos dez vizinhos temporais e acrescenta candidatos de fechamento por árvore de vocabulário. O modelo de câmera é compartilhado entre todos os quadros, e o ajuste global refina poses, pontos e intrínsecas. Entre os modelos produzidos, o código conserva aquele com mais imagens registradas em \texttt{sfm/colmap.py:294--331}. A conversão para matrizes NumPy, centros de câmera, observações e estatísticas é feita por \texttt{sfm/convert.py:164--224}.
+\subsection{Escala métrica}
 
-O SfM determina a cena apenas até uma transformação de similaridade. A escala é recuperada ajustando a projeção superior da nuvem a um contorno medido da cozinha. O procedimento remove outliers, encontra o piso, testa rotações e espelhamento do contorno e estima a escala robustamente em \texttt{sfm/scale\_outline.py:100--247}. O ajuste aceito resultou em 29,37\,cm por unidade do modelo, resíduo mediano de 1,33\,cm, percentil 90 de 7,37\,cm, 93,1\% de inliers e suporte de contorno de 99,6\%.
+% fonte: escala.*, erro.*
+O SfM define a cena só até uma similaridade. Era: marcador ArUco. Ficou: contorno medido da cozinha, ajustado à projeção superior da nuvem, porque não há marcador na cena. O ajuste deu 29,37\,cm por unidade, resíduo mediano de 1,33\,cm, percentil 90 de 7,37\,cm, 93,1\% de inliers e suporte do contorno de 99,6\%. Largura e comprimento da planta, com erros de 0,59\% e 3,50\%, são circulares; a validação independente é o leave-one-out (LOO) sobre as cinco paredes, com 10,16\,cm e 3,75\%.
 
-\subsection{Limpeza, planos e planta baixa}
+\subsection{Densificação, limpeza e malha}
 
-Após a escala, a limpeza em \texttt{cloud/clean.py:97--179} aplica remoção estatística de outliers, voxelização de 1\,cm e recorte robusto. Na nuvem esparsa, 727716 pontos foram reduzidos a 286458 sem alterar a escala. O piso e as paredes são extraídos iterativamente por RANSAC: \texttt{segment\_plane} remove os inliers de cada plano em \texttt{cloud/planes.py:123--144}, e as paredes são ajustadas como segmentos no plano do piso. A planta em \texttt{cloud/floorplan.py:179--215} usa as direções das paredes e um retângulo orientado robusto; a trajetória das câmeras é projetada sobre a mesma referência.
+% fonte: limpeza.*, T2 (t2_filtragem.md), denso.*, poisson.*, buracos.*, malha.*
+\textbf{Densificação.} Há 9 densificadores. Ficou o PatchMatch do COLMAP, executado em linha de comando com 3 iterações e 2326 imagens de referência. Deu 1428041 pontos limpos, completude 0,865 e distância de Chamfer de 1,95\,cm, mas levou 26397,7\,s, 70\% do pipeline. O PatchMatch do COLMAP é a nuvem densa usada na malha. Entre os nove métodos, o Plane Sweep teve completude e Chamfer melhores contra a esparsa e foi 20 vezes mais rápido, mas essas métricas não usam referência externa; a comparação com o LiDAR (Light Detection and Ranging, Seção~\ref{sec:lidar}), feita só com o PatchMatch, confirma sua qualidade absoluta (Chamfer 3,82\,cm). O VGGT (Visual Geometry Grounded Transformer)~\cite{wang2025vggt} e o MapAnything usam 80 quadros. Espúrios: 6,32\% (Figura~\ref{fig:planta}c); ver Seção~\ref{sec:resultados}.
 
-\subsection{Densificação e malha}
+\textbf{Limpeza.} Era: remoção estatística, voxel e recorte. Ficou: o voxel de 1\,cm. A configuração da rodada final manteve a limpeza desativada (\texttt{std\_ratio} 100 e recorte aberto em \texttt{config\_cozinha.yaml}): a remoção estatística, com desvio 100, retirou só 5 pontos da esparsa, e o Poisson não usou corte por densidade. O voxel reduziu 727716 para 286458, ou 60,6\%, e, no PatchMatch, 98083833 para 1428041 (Figura~\ref{fig:limpeza}). Num pós-processamento separado, removemos da nuvem densa os espúrios e o teto, com h $>$ 278\,cm. Este é um segundo corte, diferente do da Figura~\ref{fig:planta}c, que não tira o teto, e a conta fecha: 52829 pontos a mais de 20\,cm do contorno, 55545 fora da faixa de altura, que é o teto, e 36416 flutuantes, num total de 144790 de 1428041 pontos, ou 10,1\%.
 
-No PatchMatch, as imagens são retificadas, os mapas de profundidade são estimados com consistência fotométrica e geométrica e as vistas são fundidas em uma nuvem, sequência implementada em \texttt{dense/pycolmap\_dense.py:128--149}. O pipeline também executa métodos clássicos e redes de profundidade multi-vista. Para tornar a comparação independente do número bruto de pontos, \texttt{dense/compare.py:131--194} calcula: densidade em pontos por metro quadrado; completude, como a fração das células do piso esparso atingidas por pelo menos um ponto denso; e distância de Chamfer simétrica à nuvem esparsa.
+\textbf{Malha.} Poisson~\cite{kazhdan2006poisson}, no Open3D~\cite{zhou2018open3d}, com profundidade 10 gerou 1555804 vértices e 3120072 faces. Era: Poisson sobre a nuvem bruta. Ficou: sobre a limpa, 8,9$\times$ mais rápido, 9,55\,s contra 84,68\,s. Duas das 4 variantes de fechamento de buracos falharam; a variante usada na malha final deixou 271 buracos, e a malha final da rodada tem 1531049 vértices e 3074852 faces, com extensão de 648 $\times$ 361 $\times$ 892\,cm, pois contém o exterior visto pela janela. A malha limpa reconstrói o Poisson com corte por densidade 0,02 e recorte da sala, e tem 3444576 vértices e 6888396 faces, com extensão de 303,6 $\times$ 458,7 $\times$ 282,2\,cm no referencial da sala, de 274,6 $\times$ 444,0\,cm, com tolerância de até 20\,cm além do contorno (Figura~\ref{fig:limpeza}d). Versões: COLMAP 4.2.0 com GLOMAP, pycolmap 4.2.1, OpenCV 5.0 e Open3D 0.20.
 
-A malha parte da nuvem PatchMatch limpa. As normais são orientadas para a câmera mais próxima e a reconstrução de Poisson resolve uma função implícita cuja isosuperfície aproxima os pontos orientados~\cite{kazhdan2006poisson}; o código está em \texttt{mesh/poisson.py:144--197}. Com profundidade 10, o método recebeu 1428041 pontos e produziu inicialmente 1555804 vértices e 3120072 faces. O pós-processamento de buracos resultou na malha final com 1531049 vértices e 3074852 faces, exportada com a trajetória e os frustos em \texttt{mesh/mesh.py:183--279}.
-
+\begin{figure}[!htbp]
+\centering
+\begin{tabular}[b]{@{}c@{}}\includegraphics[height=100pt]{limpeza_outliers_img_0127.jpg}\\[-1pt]{\scriptsize (a, b) Esparsa}\end{tabular}\hspace{2pt}\begin{tabular}[b]{@{}c@{}}\includegraphics[height=100pt]{malha_antes_crop.jpg}\\[-1pt]{\scriptsize (c) Antes}\end{tabular}\hspace{2pt}\begin{tabular}[b]{@{}c@{}}\includegraphics[height=100pt]{malha_limpa_crop.jpg}\\[-1pt]{\scriptsize (d) Depois: malha limpa}\end{tabular}
+\caption{(a, b) Recomputação ilustrativa dos outliers da esparsa, com 20 vizinhos e desvio 2,0, em vermelho: 9511 de 727716 pontos na vista de cima e 9 de 14164 no quadro img\_0127. (c) Malha de Poisson da rodada (1555804 vértices e 3120072 faces), sem o teto, com as faces que o corte por densidade 0,02 remove em vermelho. (d) Malha limpa gerada a partir dela, sem o teto e sem o exterior, com 3444576 vértices e 6888396 faces.}
+\label{fig:limpeza}
+\end{figure}

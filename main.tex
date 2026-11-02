@@ -3,8 +3,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{epsfig, epstopdf}
 \usepackage{graphicx} % Required for inserting images
+\graphicspath{{images/report/}}
 \usepackage{subcaption}
-\captionsetup{font=small,skip=3pt}
+\captionsetup{font=footnotesize,skip=2pt}
 \usepackage{amssymb,url}
 \usepackage{multirow}
 \usepackage{booktabs, comment}
@@ -15,14 +16,16 @@
 \usepackage[brazil]{babel}
 \usepackage{xspace}
 \usepackage{xcolor}
+\usepackage{multicol}
 
 \renewcommand{\topfraction}{0.9}
 \renewcommand{\bottomfraction}{0.8}
 \renewcommand{\textfraction}{0.07}
 \renewcommand{\floatpagefraction}{0.85}
 
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
-\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{5pt plus 2pt minus 2pt}
+\setlength{\floatsep}{4pt plus 2pt minus 2pt}
+\setlength{\intextsep}{5pt plus 2pt minus 2pt}
 \setlength{\abovecaptionskip}{3pt}
 
 \usepackage{fancyhdr}
@@ -150,22 +153,21 @@ Maxime Doudy
 % 1. Introdução
 \input{sections/01_introduction/1_0_intro}
 
+% Pipeline
+\begin{figure}[!htbp]
+\centering
+
+\includegraphics[width=\textwidth]{pipeline.pdf}
+
+\caption{Pipeline da reconstrução da cozinha; cada bloco traz a etapa e o número que a resume.}
+
+\label{fig:pipeline}
+\end{figure}
+
 % 2. Aquisição
 \input{sections/2_aquisicao/2_0_aquisicao}
 
 
-% Pipeline
-\begin{figure}[!t]
-\centering
-
-\includegraphics[
-  width=0.76\textwidth
-]{images/report/pipeline.png}
-
-\caption{Pipeline da reconstrução 3D.}
-
-\label{fig:pipeline}
-\end{figure}
 
 
 % 3. Método
@@ -176,8 +178,6 @@ Maxime Doudy
 
 % Compact bibliography
 % (references in footnotesize, tight item spacing).
-% ponytail: bibtex errors out while there is no \cite yet;
-% this block is harmless once the first citation exists.
 \begingroup
 
 \footnotesize
@@ -197,8 +197,11 @@ Maxime Doudy
 
 \makeatother
 
-\bibliographystyle{unsrt}
+% unsrt_hifen.bst: copia do unsrt que escreve hifen (e nao meia-risca) nos intervalos de paginas
+\bibliographystyle{unsrt_hifen}
+\begin{multicols}{2}
 \bibliography{references}
+\end{multicols}
 
 \endgroup
 
