@@ -4,16 +4,14 @@
         {
             "label": "Build main.tex",
             "type": "shell",
-            "command": "cd ${workspaceFolder} && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/bibtex main && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -interaction=nonstopmode main.tex",
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "command": "/home/moliveira/.TinyTeX/bin/x86_64-linux/latexmk",
+            "args": ["-pdf", "-synctex=1", "-interaction=nonstopmode", "-file-line-error", "main.tex"],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": { "PATH": "/home/moliveira/.TinyTeX/bin/x86_64-linux:/usr/local/bin:/usr/bin:/bin" }
             },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "clear": true
-            },
+            "group": { "kind": "build", "isDefault": true },
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
             "problemMatcher": []
         }
     ]

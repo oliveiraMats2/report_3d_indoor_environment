@@ -1,36 +1,32 @@
 {
     "latex-workshop.view.pdf.viewer": "tab",
     "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.synctex.synctexjs.enabled": true,
+    "latex-workshop.view.pdf.internal.synctex.keybinding": "ctrl-click",
     "latex-workshop.latex.outDir": "%DIR%",
     "latex-workshop.latex.autoBuild.run": "onSave",
-    "latex-workshop.latex.recipe.default": "first",
+    "latex-workshop.latex.autoClean.run": "never",
+    "latex-workshop.latex.recipe.default": "latexmk",
     "latex-workshop.latex.recipes": [
         {
-            "name": "pdflatex + bibtex + pdflatex × 2",
-            "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex"]
-        },
-        {
-            "name": "pdflatex × 2",
-            "tools": ["pdflatex", "pdflatex"]
+            "name": "latexmk",
+            "tools": ["latexmk"]
         }
     ],
     "latex-workshop.latex.tools": [
         {
-            "name": "pdflatex",
-            "command": "pdflatex",
+            "name": "latexmk",
+            "command": "/home/moliveira/.TinyTeX/bin/x86_64-linux/latexmk",
             "args": [
+                "-pdf",
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
                 "%DOC%"
             ],
-            "env": {}
-        },
-        {
-            "name": "bibtex",
-            "command": "bibtex",
-            "args": ["%DOCFILE%"],
-            "env": {}
+            "env": {
+                "PATH": "/home/moliveira/.TinyTeX/bin/x86_64-linux:/usr/local/bin:/usr/bin:/bin"
+            }
         }
     ],
     "[latex]": {

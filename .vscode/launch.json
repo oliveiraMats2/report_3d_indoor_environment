@@ -5,11 +5,10 @@
             "name": "Build main.tex",
             "type": "node",
             "request": "launch",
-            "runtimeExecutable": "/bin/zsh",
-            "runtimeArgs": [
-                "-c",
-                "cd ${workspaceFolder} && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -synctex=1 -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/bibtex main && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -synctex=1 -interaction=nonstopmode main.tex && /usr/local/texlive/2026/bin/universal-darwin/pdflatex -synctex=1 -interaction=nonstopmode main.tex && echo '=== main.pdf gerado ==='"
-            ],
+            "runtimeExecutable": "/home/moliveira/.TinyTeX/bin/x86_64-linux/latexmk",
+            "runtimeArgs": ["-pdf", "-synctex=1", "-interaction=nonstopmode", "-file-line-error", "main.tex"],
+            "cwd": "${workspaceFolder}",
+            "env": { "PATH": "/home/moliveira/.TinyTeX/bin/x86_64-linux:/usr/local/bin:/usr/bin:/bin" },
             "console": "integratedTerminal"
         }
     ]

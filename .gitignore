@@ -30,3 +30,12 @@
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Diagramas de exemplo (referência visual)
+diagramas_exemplo/
+diagrams/
+notas/
+
+# Figura do pipeline (vetorial) fica versionada; caches de render ficam fora
+!images/report/pipeline.pdf
+images/report/scripts/_*.png
