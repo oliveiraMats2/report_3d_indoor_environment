@@ -3,7 +3,7 @@ Rodar uma vez antes de pipeline.py:
   /home/moliveira/Documents/3d_indoor_environment/.venv/bin/python pipeline_malha.py
 Saídas (cache, neste diretório):
   _densa_hi.png  nuvem PatchMatch limpa, mesma câmera/recorte de densa.py (G12), câmeras em azul;
-  _malha_hi.png  malha final (mesh/vertices, faces, colors) sem teto, sombreada na mão.
+  _malha_hi.png  malha limpa final (malha_limpa/malha_limpa.ply) sem teto, sombreada na mão.
 Ambos renderizados com supersampling SS x (point_size e line_width multiplicados por SS);
 a redução LANCZOS até o tamanho do painel é feita em pipeline.py.
 Somente leitura em /home/moliveira/Documents/3d_indoor_environment."""
@@ -50,8 +50,8 @@ if "densa" in QUAIS:
     del r
 
 if "malha" in QUAIS:
-    v = np.load(D + "mesh/vertices.npy"); f = np.load(D + "mesh/faces.npy"); c = np.load(D + "mesh/colors.npy")
-    if c.max() > 1.5: c = c / 255.0
+    ml = o3d.io.read_triangle_mesh(D + "malha_limpa/malha_limpa.ply")   # malha limpa final (6888396 faces)
+    v = np.asarray(ml.vertices); f = np.asarray(ml.triangles); c = np.asarray(ml.vertex_colors)
     pl = np.load(D + "planes/floor.npy"); up = pl[:3] / np.linalg.norm(pl[:3])
     alt = v @ pl[:3] + pl[3]
     keep = alt[f].mean(1) <= float(os.environ.get("CORTE", 255))

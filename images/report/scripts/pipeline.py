@@ -9,7 +9,7 @@ Cada painel vem da fonte em resolução cheia: quadros PNG 1920x1080 de R/cozinh
 LANCZOS direto para o tamanho final do painel.
 Números (R/cozinha/artifacts/config_cozinha/): extraction_metrics.csv (2327), detector_choice.csv (SIFT 0,936),
 matching_metrics.csv (666 de 765, img_0774__img_0790, sift), sfm_metrics.csv (2326 registradas, 727716 pontos),
-cleanup.csv (1428041 pontos), mesh.csv (3074852 faces)."""
+cleanup.csv (1428041 pontos); RUN/malha_limpa/resumo.json (6888396 faces da malha limpa)."""
 import csv, os, subprocess
 import numpy as np, cv2, pycolmap
 import matplotlib
@@ -37,7 +37,8 @@ sift = [r for r in rd(A + "detector_choice.csv") if r["detector"] == "sift"][0]
 mm = [r for r in rd(A + "matching_metrics.csv") if r["detector"] == "sift" and r["pair"] == PAR][0]
 sfm = rd(A + "sfm_metrics.csv")[0]
 cl = [r for r in rd(A + "cleanup.csv") if r["source"] == "patch_match"][0]
-mesh = rd(A + "mesh.csv")[0]
+import json
+mesh_limpa = json.load(open(RUN + "malha_limpa/resumo.json"))["final"]
 cap = {
  1: f"{br(n_q)} quadros",
  2: f"SIFT, escore {br(float(sift['score']),3)}",
@@ -45,7 +46,7 @@ cap = {
  4: f"{br(int(sfm['n_registered']))} poses",
  5: f"{br(int(sfm['n_sparse']))} pontos 3D",
  6: f"{br(int(cl['n_after_voxel'])/1e6,2)} M pontos",
- 7: f"{br(int(mesh['n_faces'])/1e6,2)} M faces",
+ 7: f"{br(int(mesh_limpa[1])/1e6,2)} M faces",
 }
 
 W, H = 6.67, 3.0
@@ -231,9 +232,9 @@ for i in range(3): arrow((xs[i] + ws[i] + 0.02, yt + hh / 2 - 0.05), (xs[i + 1] 
 w5 = 2.0; x5 = xs[3] + ws[3] - w5
 w6 = 1.5; x6 = x5 - g - w6
 w7 = x6 - g - 0.04; x7 = 0.04
-panel(5, "Triangulação", x5, y2, w5, h2, triang)
+panel(5, "Triangulação da esparsa", x5, y2, w5, h2, triang)
 panel(6, "Nuvem densa", x6, y2, w6, h2, densa)
-panel(7, "Malha final", x7, y2, w7, h2, malha)
+panel(7, "Malha limpa final", x7, y2, w7, h2, malha)
 xa = xs[3] + ws[3] / 2; arrow((xa, yt - 0.02), (xa, y2 + h2 + 0.02))
 arrow((x5 - 0.02, y2 + h2 / 2), (x6 + w6 + 0.02, y2 + h2 / 2))
 arrow((x6 - 0.02, y2 + h2 / 2), (x7 + w7 + 0.02, y2 + h2 / 2))

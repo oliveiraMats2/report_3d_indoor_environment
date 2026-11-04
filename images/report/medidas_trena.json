@@ -1,0 +1,55 @@
+{
+ "mesa_altura": {
+  "trena_cm": 78,
+  "modelo_cm": 73.5,
+  "erro_cm": 4.47,
+  "erro_rel_pct": 5.73
+ },
+ "mesa_largura": {
+  "trena_cm": 126,
+  "modelo_cm": 123.0,
+  "erro_cm": 3.0,
+  "erro_rel_pct": 2.38
+ },
+ "mesa_profundidade": {
+  "trena_cm": 53,
+  "modelo_cm": 56.0,
+  "erro_cm": 3.0,
+  "erro_rel_pct": 5.66
+ },
+ "micro_altura": {
+  "trena_cm": 32,
+  "modelo_cm": 31.9,
+  "erro_cm": 0.12,
+  "erro_rel_pct": 0.37
+ },
+ "micro_largura": {
+  "trena_cm": 59,
+  "modelo_cm": 60.0,
+  "erro_cm": 1.0,
+  "erro_rel_pct": 1.69
+ },
+ "micro_profundidade": {
+  "trena_cm": 43,
+  "modelo_cm": 41.5,
+  "erro_cm": 1.5,
+  "erro_rel_pct": 3.49
+ },
+ "livro_comprimento": {
+  "trena_cm": 20,
+  "modelo_cm": 19.3,
+  "erro_cm": 0.67,
+  "erro_rel_pct": 3.36
+ },
+ "media": {
+  "erro_cm": 1.97,
+  "erro_rel_pct": 3.24
+ },
+ "livro_largura_sem_trena_cm": 13.3,
+ "alturas_referencia_cm": {
+  "tampo_mesa": 73.5,
+  "tampo_micro": 118.9,
+  "tampo_armario": 87.0,
+  "piso_livro": 0.06
+ }
+}
