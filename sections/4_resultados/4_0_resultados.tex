@@ -3,7 +3,7 @@
 
 \subsection{Nuvem esparsa e trajetória}
 % fonte: numeros.json sfm.*, deriva.*, densidade.*; limpeza.*
-O SfM registrou 2326 dos 2327 quadros, 99,96\%. Reconstruiu 727716 pontos, trilha média de 9,41 observações, em 2123,6\,s. A reprojeção média é 0,565\,px. A primeira e a última câmera ficam a 60,43\,cm em 76,13\,m de percurso, deriva de 0,794\%, e a 22,50\,cm no par visual (Figura~\ref{fig:planta}a).
+O SfM reconstruiu 727716 pontos, trilha média de 9,41 observações, em 2123,6\,s. A reprojeção tem média de 0,565\,px e mediana de 0,484\,px por ponto. A primeira e a última câmera ficam a 60,43\,cm em 76,13\,m de percurso, deriva de 0,794\%, e a 22,50\,cm no par visual (Figura~\ref{fig:planta}a).
 
 \begin{figure}[!htbp]
 \centering
@@ -31,7 +31,7 @@ No LOO, em que a escala de cada parede vem das demais, o erro absoluto médio é
 \centering
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\caption{Erro métrico ($\hat{L}$: modelo; $L$: app Medida, com resolução de 1\,cm, ou trena). Negrito: melhor valor por coluna entre as paredes LOO. A média usa só as cinco LOO; as medidas da planta são circulares, pois a escala vem do mesmo contorno. Trena: objetos medidos em 04/11/2026, fora da escala; alturas sobre o piso do modelo.}
+\caption{Erro métrico ($\hat{L}$: modelo; $L$: app Medida, com resolução de 1\,cm, ou trena). Negrito: melhor valor por coluna entre as paredes LOO. A média usa só as cinco LOO; as medidas da planta são circulares, pois a escala vem do mesmo contorno. Trena: objetos medidos em 04/11/2026, fora da escala, com regiões e bordas escolhidas à mão na nuvem; alturas sobre o piso do modelo.}
 \label{tab:erro}
 \begin{tabular}{lrrrr}
 \toprule
@@ -118,7 +118,7 @@ VGGT$^{\dagger}$ & 407682 & 33438 & 0,372 & 13,23 & \textbf{18,5} & 80 \\
 \subsection{Comparação com LiDAR}
 \label{sec:lidar}
 % fonte: notas/t5_lidar.md
-O alinhamento automático por Manhattan, FPFH (Fast Point Feature Histograms), RANSAC e ICP (Iterative Closest Point) deu RMSE (raiz do erro quadrático médio) de 1,68\,cm, Chamfer de 3,82\,cm, F-score (média harmônica de precisão e revocação) de 0,792 a 5\,cm e 93,5\% dos pontos do modelo a até 5\,cm (Figura~\ref{fig:lidar}). Nas distâncias parede a parede por picos de histograma de planos, 431,6 e 274,1\,cm, o modelo fica a 0,4 a 0,6\% do app Medida e o LiDAR, 3,1 a 4,1\% acima. O pé-direito é 302,8\,cm no LiDAR e 289,8\,cm no modelo.
+O alinhamento automático por Manhattan, FPFH (Fast Point Feature Histograms), RANSAC e ICP (Iterative Closest Point) deu RMSE (raiz do erro quadrático médio) de 1,68\,cm, Chamfer de 3,82\,cm, F-score (média harmônica de precisão e revocação) de 0,792 a 5\,cm e 93,5\% dos pontos do modelo a até 5\,cm (Figura~\ref{fig:lidar}). A diferença mediana de profundidade entre PatchMatch e LiDAR é 1,95\,cm, com percentil 90 de 11,6\,cm. Nas distâncias parede a parede por picos de histograma de planos, 431,6 e 274,1\,cm, o modelo fica a 0,4 a 0,6\% do app Medida e o LiDAR, 3,1 a 4,1\% acima. O pé-direito é 302,8\,cm no LiDAR e 289,8\,cm no modelo.
 
 \begin{figure}[!htbp]
 \centering
@@ -128,4 +128,4 @@ O alinhamento automático por Manhattan, FPFH (Fast Point Feature Histograms), R
 \end{figure}
 
 \subsection{Limitações}
-A escala vem do contorno, o que torna a planta circular, a largura e o comprimento do cômodo vêm do app Medida, e não da trena, e os 2327 quadros excedem a faixa de 100 a 300. Entregamos um \href{https://drive.google.com/file/d/1f05rPYVydJGvxusuyds9-6cowvK-_sm1/view}{\mychgblue{vídeo de navegação}} de 50\,s da malha com a trajetória e o modelo em GLB com a \href{https://drive.google.com/file/d/1R6QfxdgqzUrMn-fhDJPsBTSAprj-qcYh/view}{\mychgblue{cena com as poses}} e a \href{https://drive.google.com/file/d/1NtF44YV-My956I-H5By3NLXyWupaheLh/view}{\mychgblue{malha limpa}}.
+Largura e comprimento do cômodo vêm do app Medida, não da trena, e os 2327 quadros excedem a faixa de 100 a 300. Entregamos um \href{https://drive.google.com/file/d/1f05rPYVydJGvxusuyds9-6cowvK-_sm1/view}{\mychgblue{vídeo de navegação}} de 50\,s e o modelo em GLB com a \href{https://drive.google.com/file/d/1R6QfxdgqzUrMn-fhDJPsBTSAprj-qcYh/view}{\mychgblue{cena com as poses}} e a \href{https://drive.google.com/file/d/1NtF44YV-My956I-H5By3NLXyWupaheLh/view}{\mychgblue{malha limpa}}.

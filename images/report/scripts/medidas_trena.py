@@ -4,6 +4,8 @@ Nuvem: PatchMatch limpa (voxel 1 cm, cm) levada ao referencial do piso por plane
 em que a terceira coordenada e a altura h sobre o piso.
 Alturas: mediana de h na faixa da superficie. Larguras: a partir do centro, bordas onde a
 ocupacao da faixa da superficie, em grade de 1 cm, fica abaixo de 50% em dois bins seguidos.
+Regioes e bordas foram escolhidas a mao, ja conhecendo os valores da trena: o criterio de borda foi trocado depois
+de a primeira versao dar 70,8 cm na largura do micro-ondas, e o fundo dele e a linha densa em x ~ 150 cm vista na nuvem.
 Uso: medidas_trena.py  (somente leitura nos dados; escreve medidas_trena.json ao lado da pasta report)."""
 import json, os
 import numpy as np, cv2
