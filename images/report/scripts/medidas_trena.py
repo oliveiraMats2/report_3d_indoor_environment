@@ -7,7 +7,7 @@ ocupacao da faixa da superficie, em grade de 1 cm, fica abaixo de 50% em dois bi
 Regioes e bordas foram escolhidas a mao, ja conhecendo os valores da trena: o criterio de borda foi trocado depois
 de a primeira versao dar 70,8 cm na largura do micro-ondas, e o fundo dele e a linha densa em x ~ 150 cm vista na nuvem.
 Uso: medidas_trena.py  (somente leitura nos dados; escreve medidas_trena.json ao lado da pasta report)."""
-import json, os
+import csv, json, os
 import numpy as np, cv2
 
 R = "/home/moliveira/Documents/3d_indoor_environment/cozinha/results/config_cozinha"
@@ -18,6 +18,7 @@ TRENA = {
     "mesa_altura": 78, "mesa_largura": 126, "mesa_profundidade": 53,
     "micro_altura": 32, "micro_largura": 59, "micro_profundidade": 43,
     "livro_comprimento": 20,
+    "pe_direito": 285, "parede_menor": 125,   # sala; parede menor = parede "porta" (123 cm no app Medida)
 }
 
 P = np.load(f"{R}/clean/patch_match/points.npy")
@@ -86,6 +87,11 @@ ml = (d < 16) & (H > piso + 0.6) & (H < 3)
 w, l = sorted(cv2.minAreaRect(Q[ml, :2].astype(np.float32))[1])
 med["livro_comprimento"] = l
 med["livro_largura_sem_trena"] = w
+
+# sala: valores do modelo ja calculados na rodada (percentil 99 do pe-direito; LOO da parede porta)
+me = {r["name"]: r for r in csv.DictReader(open(R.replace("results", "artifacts") + "/metric_error.csv"))}
+med["pe_direito"] = float(me["ceiling_height"]["model_cm"])
+med["parede_menor"] = float(me["porta"]["model_cm"])
 
 res = {}
 for k, v in TRENA.items():

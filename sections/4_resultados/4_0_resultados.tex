@@ -25,13 +25,13 @@ O SfM reconstruiu 727716 pontos, trilha média de 9,41 observações, em 2123,6\
 
 \subsection{Erro métrico}
 % fonte: tabelas/tab_erro.tex, tab_angulos.tex; numeros.json erro.*, angulo.*
-No LOO, em que a escala de cada parede vem das demais, o erro absoluto médio é 10,16\,cm e o relativo, 3,75\% (Tabela~\ref{tab:erro}). Os objetos medidos com trena, que não entram na escala, têm erro médio de 1,97\,cm e 3,24\%; a altura da mesa, 73,5 contra 78\,cm, fica 5,7\% abaixo, como o pé-direito diante do LiDAR (Seção~\ref{sec:lidar}). Os cantos retos deram 89,38\textdegree{}, 91,17\textdegree{} e 85,33\textdegree{}, com erros de 0,62\textdegree{}, 1,17\textdegree{} e 4,67\textdegree{}, e os encontros com a parede chanfrada, 141,52\textdegree{} e 132,60\textdegree{} contra 135\textdegree{}, com erros de 6,52\textdegree{} e 2,40\textdegree{}.
+No LOO, em que a escala de cada parede vem das demais, o erro absoluto médio é 10,16\,cm e o relativo, 3,75\% (Tabela~\ref{tab:erro}). As nove medidas de trena, que não entram na escala, têm erro médio de 3,15\,cm e 3,51\%: o pé-direito fica 2,14\% acima e a altura da mesa, 5,73\% abaixo. Os cantos retos deram 89,38\textdegree{}, 91,17\textdegree{} e 85,33\textdegree{}, e os encontros com a parede chanfrada, 141,52\textdegree{} e 132,60\textdegree{} contra 135\textdegree{}.
 
 \begin{table}[!htbp]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\caption{Erro métrico ($\hat{L}$: modelo; $L$: app Medida, com resolução de 1\,cm, ou trena). Negrito: melhor valor por coluna entre as paredes LOO. A média usa só as cinco LOO; as medidas da planta são circulares, pois a escala vem do mesmo contorno. Trena: objetos medidos em 04/11/2026, fora da escala, com regiões e bordas escolhidas à mão na nuvem; alturas sobre o piso do modelo.}
+\caption{Erro métrico ($\hat{L}$: modelo; $L$: app Medida, com resolução de 1\,cm, ou trena). Negrito: melhor valor por coluna entre as paredes LOO. A média usa só as cinco LOO; as medidas da planta são circulares, pois a escala vem do mesmo contorno. Trena: fora da escala; nos objetos, medidos em 04/11/2026, regiões e bordas foram escolhidas à mão na nuvem; pé-direito pelo percentil 99 e parede menor pelo LOO.}
 \label{tab:erro}
 \begin{tabular}{lrrrr}
 \toprule
@@ -55,7 +55,9 @@ Micro-ondas, altura (trena) & 32,0 & 31,9 & 0,12 & 0,37 \\
 Micro-ondas, largura (trena) & 59,0 & 60,0 & 1,00 & 1,69 \\
 Micro-ondas, profund. (trena) & 43,0 & 41,5 & 1,50 & 3,49 \\
 Livro, lado maior (trena) & 20,0 & 19,3 & 0,67 & 3,36 \\
-Média (7 linhas trena) &  &  & 1,97 & 3,24 \\
+Pé-direito (trena) & 285,0 & 291,1 & 6,11 & 2,14 \\
+Parede menor, porta (trena) & 125,0 & 116,5 & 8,48 & 6,78 \\
+Média (9 linhas trena) &  &  & 3,15 & 3,51 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -118,7 +120,7 @@ VGGT$^{\dagger}$ & 407682 & 33438 & 0,372 & 13,23 & \textbf{18,5} & 80 \\
 \subsection{Comparação com LiDAR}
 \label{sec:lidar}
 % fonte: notas/t5_lidar.md
-O alinhamento automático por Manhattan, FPFH (Fast Point Feature Histograms), RANSAC e ICP (Iterative Closest Point) deu RMSE (raiz do erro quadrático médio) de 1,68\,cm, Chamfer de 3,82\,cm, F-score (média harmônica de precisão e revocação) de 0,792 a 5\,cm e 93,5\% dos pontos do modelo a até 5\,cm (Figura~\ref{fig:lidar}). A diferença mediana de profundidade entre PatchMatch e LiDAR é 1,95\,cm, com percentil 90 de 11,6\,cm. Nas distâncias parede a parede por picos de histograma de planos, 431,6 e 274,1\,cm, o modelo fica a 0,4 a 0,6\% do app Medida e o LiDAR, 3,1 a 4,1\% acima. O pé-direito é 302,8\,cm no LiDAR e 289,8\,cm no modelo.
+O alinhamento automático por Manhattan, FPFH (Fast Point Feature Histograms), RANSAC e ICP (Iterative Closest Point) deu RMSE (raiz do erro quadrático médio) de 1,68\,cm, Chamfer de 3,82\,cm, F-score (média harmônica de precisão e revocação) de 0,792 a 5\,cm e 93,5\% dos pontos do modelo a até 5\,cm (Figura~\ref{fig:lidar}). A diferença mediana de profundidade entre PatchMatch e LiDAR é 1,95\,cm, com percentil 90 de 11,6\,cm. Nas distâncias parede a parede por picos de histograma de planos, 431,6 e 274,1\,cm, o modelo fica a 0,4 a 0,6\% do app Medida e o LiDAR, 3,1 a 4,1\% acima. O pé-direito é 302,8\,cm no LiDAR, 6,2\% acima da trena, e 289,8\,cm no modelo por picos de histograma, 1,7\% acima.
 
 \begin{figure}[!htbp]
 \centering
@@ -128,4 +130,4 @@ O alinhamento automático por Manhattan, FPFH (Fast Point Feature Histograms), R
 \end{figure}
 
 \subsection{Limitações}
-Largura e comprimento do cômodo vêm do app Medida, não da trena, e os 2327 quadros excedem a faixa sugerida. Entregamos um \href{https://drive.google.com/file/d/1f05rPYVydJGvxusuyds9-6cowvK-_sm1/view}{\mychgblue{vídeo de navegação}} e o modelo GLB, com a \href{https://drive.google.com/file/d/1R6QfxdgqzUrMn-fhDJPsBTSAprj-qcYh/view}{\mychgblue{cena com as poses}} e a \href{https://drive.google.com/file/d/1NtF44YV-My956I-H5By3NLXyWupaheLh/view}{\mychgblue{malha limpa}}.
+Largura e comprimento do cômodo vêm do app Medida, não da trena; na parede menor, os dois diferem em 2\,cm, 125 contra 123\,cm. Os 2327 quadros excedem a faixa sugerida. Entregamos um \href{https://drive.google.com/file/d/1f05rPYVydJGvxusuyds9-6cowvK-_sm1/view}{\mychgblue{vídeo de navegação}} e o modelo GLB, com a \href{https://drive.google.com/file/d/1R6QfxdgqzUrMn-fhDJPsBTSAprj-qcYh/view}{\mychgblue{cena com as poses}} e a \href{https://drive.google.com/file/d/1NtF44YV-My956I-H5By3NLXyWupaheLh/view}{\mychgblue{malha limpa}}.

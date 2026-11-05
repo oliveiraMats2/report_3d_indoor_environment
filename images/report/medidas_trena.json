@@ -41,9 +41,21 @@
   "erro_cm": 0.67,
   "erro_rel_pct": 3.36
  },
+ "pe_direito": {
+  "trena_cm": 285,
+  "modelo_cm": 291.1,
+  "erro_cm": 6.11,
+  "erro_rel_pct": 2.14
+ },
+ "parede_menor": {
+  "trena_cm": 125,
+  "modelo_cm": 116.5,
+  "erro_cm": 8.48,
+  "erro_rel_pct": 6.78
+ },
  "media": {
-  "erro_cm": 1.97,
-  "erro_rel_pct": 3.24
+  "erro_cm": 3.15,
+  "erro_rel_pct": 3.51
  },
  "livro_largura_sem_trena_cm": 13.3,
  "alturas_referencia_cm": {
