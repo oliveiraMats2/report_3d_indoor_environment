@@ -19,6 +19,7 @@ TRENA = {
     "micro_altura": 32, "micro_largura": 59, "micro_profundidade": 43,
     "livro_comprimento": 20,
     "pe_direito": 285, "parede_menor": 125,   # sala; parede menor = parede "porta" (123 cm no app Medida)
+    "largura_sala": 274, "comprimento_sala": 430,   # paredes janela e pia_fogao (273 e 429 cm no app Medida)
 }
 
 P = np.load(f"{R}/clean/patch_match/points.npy")
@@ -88,10 +89,12 @@ w, l = sorted(cv2.minAreaRect(Q[ml, :2].astype(np.float32))[1])
 med["livro_comprimento"] = l
 med["livro_largura_sem_trena"] = w
 
-# sala: valores do modelo ja calculados na rodada (percentil 99 do pe-direito; LOO da parede porta)
+# sala: valores do modelo ja calculados na rodada (percentil 99 do pe-direito; LOO das paredes)
 me = {r["name"]: r for r in csv.DictReader(open(R.replace("results", "artifacts") + "/metric_error.csv"))}
 med["pe_direito"] = float(me["ceiling_height"]["model_cm"])
 med["parede_menor"] = float(me["porta"]["model_cm"])
+med["largura_sala"] = float(me["janela"]["model_cm"])
+med["comprimento_sala"] = float(me["pia_fogao"]["model_cm"])
 
 res = {}
 for k, v in TRENA.items():

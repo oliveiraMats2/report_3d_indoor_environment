@@ -53,9 +53,21 @@
   "erro_cm": 8.48,
   "erro_rel_pct": 6.78
  },
+ "largura_sala": {
+  "trena_cm": 274,
+  "modelo_cm": 269.1,
+  "erro_cm": 4.95,
+  "erro_rel_pct": 1.81
+ },
+ "comprimento_sala": {
+  "trena_cm": 430,
+  "modelo_cm": 448.1,
+  "erro_cm": 18.05,
+  "erro_rel_pct": 4.2
+ },
  "media": {
-  "erro_cm": 3.15,
-  "erro_rel_pct": 3.51
+  "erro_cm": 4.67,
+  "erro_rel_pct": 3.42
  },
  "livro_largura_sem_trena_cm": 13.3,
  "alturas_referencia_cm": {

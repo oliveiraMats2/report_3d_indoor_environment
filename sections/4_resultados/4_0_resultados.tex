@@ -25,13 +25,13 @@ O SfM reconstruiu 727716 pontos, trilha média de 9,41 observações, em 2123,6\
 
 \subsection{Erro métrico}
 % fonte: tabelas/tab_erro.tex, tab_angulos.tex; numeros.json erro.*, angulo.*
-No LOO, em que a escala de cada parede vem das demais, o erro absoluto médio é 10,16\,cm e o relativo, 3,75\% (Tabela~\ref{tab:erro}). As nove medidas de trena, que não entram na escala, têm erro médio de 3,15\,cm e 3,51\%: o pé-direito fica 2,14\% acima e a altura da mesa, 5,73\% abaixo. Os cantos retos deram 89,38\textdegree{}, 91,17\textdegree{} e 85,33\textdegree{}, e os encontros com a parede chanfrada, 141,52\textdegree{} e 132,60\textdegree{} contra 135\textdegree{}.
+No LOO, em que a escala de cada parede vem das demais, o erro absoluto médio é 10,16\,cm e o relativo, 3,75\% (Tabela~\ref{tab:erro}). As onze medidas de trena, que não entram na escala, têm erro médio de 4,67\,cm e 3,42\%. Os cantos retos deram 89,38\textdegree{}, 91,17\textdegree{} e 85,33\textdegree{}, e os encontros com a parede chanfrada, 141,52\textdegree{} e 132,60\textdegree{} contra 135\textdegree{}.
 
 \begin{table}[!htbp]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\caption{Erro métrico ($\hat{L}$: modelo; $L$: app Medida, com resolução de 1\,cm, ou trena). Negrito: melhor valor por coluna entre as paredes LOO. A média usa só as cinco LOO; as medidas da planta são circulares, pois a escala vem do mesmo contorno. Trena: fora da escala; nos objetos, medidos em 04/11/2026, regiões e bordas foram escolhidas à mão na nuvem; pé-direito pelo percentil 99 e parede menor pelo LOO.}
+\caption{Erro métrico ($\hat{L}$: modelo; $L$: app Medida, com resolução de 1\,cm, ou trena). Negrito: melhor valor por coluna entre as paredes LOO. As medidas da planta são circulares, pois a escala vem do mesmo contorno. Trena: fora da escala; objetos com regiões e bordas escolhidas à mão na nuvem; pé-direito pelo percentil 99 e paredes pelo LOO.}
 \label{tab:erro}
 \begin{tabular}{lrrrr}
 \toprule
@@ -55,9 +55,11 @@ Micro-ondas, altura (trena) & 32,0 & 31,9 & 0,12 & 0,37 \\
 Micro-ondas, largura (trena) & 59,0 & 60,0 & 1,00 & 1,69 \\
 Micro-ondas, profund. (trena) & 43,0 & 41,5 & 1,50 & 3,49 \\
 Livro, lado maior (trena) & 20,0 & 19,3 & 0,67 & 3,36 \\
+Largura da sala, janela (trena) & 274,0 & 269,1 & 4,95 & 1,81 \\
+Comprimento da sala, pia-fogão (trena) & 430,0 & 448,1 & 18,05 & 4,20 \\
 Pé-direito (trena) & 285,0 & 291,1 & 6,11 & 2,14 \\
 Parede menor, porta (trena) & 125,0 & 116,5 & 8,48 & 6,78 \\
-Média (9 linhas trena) &  &  & 3,15 & 3,51 \\
+Média (11 linhas trena) &  &  & 4,67 & 3,42 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -130,4 +132,4 @@ O alinhamento automático por Manhattan, FPFH (Fast Point Feature Histograms), R
 \end{figure}
 
 \subsection{Limitações}
-Largura e comprimento do cômodo vêm do app Medida, não da trena; na parede menor, os dois diferem em 2\,cm, 125 contra 123\,cm. Os 2327 quadros excedem a faixa sugerida. Entregamos um \href{https://drive.google.com/file/d/1f05rPYVydJGvxusuyds9-6cowvK-_sm1/view}{\mychgblue{vídeo de navegação}} e o modelo GLB, com a \href{https://drive.google.com/file/d/1R6QfxdgqzUrMn-fhDJPsBTSAprj-qcYh/view}{\mychgblue{cena com as poses}} e a \href{https://drive.google.com/file/d/1NtF44YV-My956I-H5By3NLXyWupaheLh/view}{\mychgblue{malha limpa}}.
+A escala usa o contorno do app Medida, que difere da trena em 1 a 2\,cm nas três paredes medidas. Os 2327 quadros excedem a faixa sugerida. Entregamos um \href{https://drive.google.com/file/d/1f05rPYVydJGvxusuyds9-6cowvK-_sm1/view}{\mychgblue{vídeo de navegação}} e o modelo GLB, com a \href{https://drive.google.com/file/d/1R6QfxdgqzUrMn-fhDJPsBTSAprj-qcYh/view}{\mychgblue{cena com as poses}} e a \href{https://drive.google.com/file/d/1NtF44YV-My956I-H5By3NLXyWupaheLh/view}{\mychgblue{malha limpa}}.
